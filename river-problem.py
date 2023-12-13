@@ -1,58 +1,64 @@
 import copy
 
+
 # Define a function that takes in a state as a dictionary and returns True if the state meets the conditions and False if it does not
 def isValid(state):
-    if state["wolf"] == state ["goat"] and state["wolf"] != state["person"]
+    if state["wolf"] == state["goat"] and state["wolf"] != state["person"]:
         return False
-    elif state["goat"] == state["cabbage"] and state["goat"] != state["person"]:
+    elif state["cabbage"] == state["goat"] and state["cabbage"] != state["person"]:
         return False
     else:
         return True
 
+
+
+
 # Define a function that takes in a state as a dictionary and returns a list of all valid states that can be reached from 1 move of the input state
 # This function will need to call the function isValid(state)
 def get_next_states(state):
+
     next_states = []
+
     same_side = []
+    for key in state:
+        if state["person"] == state[key] and key != "person":
+            same_side.append(key)
+    print("This is the same side list ", same_side)
 
-    for thing in state:
-         if state[thing] == state["person"] and thing != "person":
-            same_side.append(thing)
+    for item in same_side:
 
-    for thing in same_side:
-        next_state = copy.deepcopy(state)
-        next_state[thing] = not state[thing]
-        next_state["person"] = not state ["person"]
+        temp_state = copy.deepcopy(state)
+        temp_state["person"] = not state["person"]
+        temp_state[item] = not state[item]
 
-        if isValid(next_state) ==  True:
-            next_states.append(next_states)
+        if (isValid(temp_state)):
+            next_states.append(temp_state)
+        else:
+            temp_state[item] = state[item]
+            next_states.append(temp_state)
 
-    just_person = copy.deepcopy(state)
-    just_person["person"] = not state["person"]
-
-    if isValid(just_person) ==True:
-        next_states.append(just_person)
-
+    print(next_states)
     return next_states
-    
 
 # Define a recursive function that takes in a current_state and win_state and returns the path to those states using the Depth First Search algorithm
 # This function will need to call the function get_next_states(state), as well as itself
 def dfs(current_state, win_state):
 
-    if current_state == win_state
-        return True
+    if current_state == win_state:
+        return True  # Goal state reached
 
-    next_states = get_next_states(current_state)
     visited_states.append(current_state)
 
-    for state in next_states:
-        if state not in visited_states:
-            path.append(state)
-            if dfs(state,win_state) = True:
-                return True
+    next_states = get_next_states(current_state)
+
+    for next_state in next_states:
+        if next_state not in visited_states:
+            path.append(next_state)
+            if dfs(next_state, win_state):
+                return True  # Goal state found
             path.pop()
-    
+
+
 # Test your code! Does it solve the river crossing riddle?
 initial_state = {
     "wolf": False,
@@ -60,7 +66,6 @@ initial_state = {
     "cabbage": False,
     "person": False
 }
-
 win_state = {
     "wolf": True,
     "goat": True,
@@ -68,6 +73,7 @@ win_state = {
     "person": True
 }
 
+visited_states = []
 visited_states = [initial_state]
 path = []
 
@@ -76,4 +82,3 @@ if dfs(initial_state, win_state):
         print("After move", index+1, "the state is ", step)
 else:
     print("No solution found.")
-
